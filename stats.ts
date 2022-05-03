@@ -8,11 +8,14 @@ function readAllNumbers() : number[] {
     for (let i = 0; i < lines.length; i++){
         if (lines[i] === "")
             continue;
-        let num = Number(lines[i]);
-        if (isNaN(num))
-            continue;
-        numbers.push(num);
+        let temp : string[] = lines[i].split(" ")
+        for (let j = 0; j < temp.length; j++) {
+            if (temp[j] == "")
+                continue;
+            numbers.push(Number(temp[j]))
+        }
     }
+
     return numbers;
 }
 
@@ -21,7 +24,7 @@ function getMean( nums  : number[]) : number {
     for (const n of nums){
         sum += n;
     }
-    return sum / nums.length;
+    return Number((sum / nums.length).toFixed(2));
 }
 
 function getAboveBelowMean(nums : number[]) : [number, number] {
@@ -41,17 +44,22 @@ function getAboveBelowMean(nums : number[]) : [number, number] {
 
 function getMedian(nums : number[]) : number {
     //Step 1
-    return NaN; // remove me!
+    return nums.length % 2 ? nums[(nums.length + 1)/2 -1] : (nums[nums.length/2] + nums[nums.length/2 - 1]) / 2;
 }
 
 function getMinMax(nums : number[]) : [number, number] {
     //Step 2
-    return [NaN, NaN]; // remove me!
+    return [nums[0], nums[nums.length-1]];
 }
 
 function getStdDev(nums : number[]) : number {
     //Step 3
-    return NaN; // remove me!
+    let mean : number = getMean(nums);
+    let std_dev : number[] = [];
+    for (let i=0; i<nums.length; i++) {
+        std_dev.push((mean-nums[i])**2);
+    }
+    return Number((getMean(std_dev) ** (1/2)).toFixed(2));
 }
 
 let basicStatsAnalyzeButton = document.querySelector("button#analyze") as HTMLButtonElement;
@@ -70,11 +78,37 @@ basicStatsAnalyzeButton.addEventListener("click", function () {
 // PART B: Advanced Integer Stats
 
 function getLeastCommonMultiple(nums : number[]) : number {
-    return NaN; // remove me!
+    let numToCheck : number = nums[nums.length-1];
+    while (true) {
+        let divisible : boolean = true;
+        for (let l=0; l<nums.length; l++) {
+            if (numToCheck % nums[l]) {
+                divisible = false;
+                continue;
+            }
+        }
+        if (divisible === true) {
+            return numToCheck;
+        }
+        numToCheck++
+    }
 }
 
 function getAllCommonFactors(nums : number[]) : number[] {
-    return [NaN]; // remove me!
+    let commonFactors : number[] = [];
+    for (let m=nums[0]; m>=1; m--) {
+        let isCommonFactor : boolean = true;
+        for (let l=0; l<nums.length; l++) {
+            if (nums[l] % m) {
+                isCommonFactor = false;
+                continue;
+            }
+        }
+        if (isCommonFactor) {
+            commonFactors.push(m);
+        }
+    }
+    return commonFactors;
 }
 
 let advancedStatsAnalyzeButton = document.querySelector("button#analyze-advanced") as HTMLButtonElement;
